@@ -1,0 +1,63 @@
+# 가상환경 디렉토리
+venv/
+env/
+.env/
+.venv/
+
+# Python 관련 파일
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 배포 관련 디렉토리
+dist/
+build/
+*.egg-info/
+
+# IDE 설정 파일
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 환경 설정 파일
+.env
+.env.local
+.env.*.local
+
+# 로그 파일
+*.log
+
+# 데이터베이스 파일
+*.sqlite3
+*.db
+
+# 기타 시스템 파일
+.DS_Store
+Thumbs.db
+
+# 가상환경 실행 파일
+bin/
+Scripts/     # Windows의 경우
+
+# 가상환경 라이브러리
+lib/
+Lib/        # Windows의 경우
+lib64/      # 64비트 시스템의 경우
+
+# wkhtmltopdf 설치 파일
+*.pkg
+wkhtmltox*
+
+# 매뉴얼 페이지
+share/man/
+
+# Python 가상환경 설정 파일 (각 작업자의 환경에 따라 생성됨)
+pyvenv.cfg
+
+# 로컬 테스트
+tmp/
+temp/
+test/
