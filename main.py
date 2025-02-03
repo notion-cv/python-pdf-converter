@@ -19,7 +19,7 @@ PATH_DEFAULT_PDF = 'result/result.pdf'
 
 
 def lambda_handler():
-    file_path = './temp/cv_2'
+    file_path = './temp/cv_jihyun_2'
 
     # 1. 테스트 파일 압축 해제
     with zipfile.ZipFile('test/cv_jihyun_2.zip', 'r') as zip_ref:
