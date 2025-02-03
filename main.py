@@ -20,8 +20,6 @@ S3_BUCKET = os.getenv('S3_BUCKET')
 LOCAL_TEMP_DIR = 'tmp/'
 
 
-
-
 def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
     try:
         # UUID 존재 및 유효성 체크
@@ -121,5 +119,3 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
 
 # 테스트용
 # lambda_handler({'requestId': 'abcd-1234-test-1234'})
-
-lambda_handler()
