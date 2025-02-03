@@ -61,3 +61,4 @@ pyvenv.cfg
 tmp/
 temp/
 test/
+result/
