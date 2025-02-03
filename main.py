@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 # Local Import
 from function.extract_files_from_zip import extract_files_from_zip as extract_files
 from function.convert_html_to_ocr_pdf import convert_html_to_ocr_pdf as convert_to_ocr_pdf
+from function.convert_html_to_pdf import convert_html_to_pdf as convert_to_pdf
 
 # CONSTANT
 PRETENDARD_LINK = 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css'
@@ -13,7 +14,8 @@ CUSTOM_CSS_LINK = 'https://d1gnhxw044igtr.cloudfront.net/notion_cv_style_px_12.c
 
 PATH_FINAL_HTML = 'tmp/image_pdf.html'
 PATH_TEMP_PDF = 'tmp/image_pdf.pdf'
-PATH_FINAL_PDF = 'result/image_pdf_final.pdf'
+PATH_OCR_PDF = 'result/ocr_result.pdf'
+PATH_DEFAULT_PDF = 'result/result.pdf'
 
 
 def lambda_handler():
@@ -73,7 +75,15 @@ def lambda_handler():
 
     print('HTML 파일 저장')
 
-    # 9. getOcrPdf
-    convert_to_ocr_pdf(PATH_FINAL_HTML, PATH_FINAL_PDF)
+    # 9. [test1] getOcrPdf
+    convert_to_ocr_pdf(PATH_FINAL_HTML, PATH_OCR_PDF)
+
+    print('OCR로 pdf 생성')
+
+    # 10. [test2] getPdf(no OCR)
+    convert_to_pdf(PATH_FINAL_HTML, PATH_DEFAULT_PDF)
+    
+    print('일반 방식으로 pdf 생성')
+
 
 lambda_handler()
