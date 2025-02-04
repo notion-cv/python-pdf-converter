@@ -22,16 +22,17 @@ LOCAL_TEMP_DIR = 'tmp/'
 
 def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
     try:
+        request_id_key = 'requestId'
         # UUID 존재 및 유효성 체크
-        if 'uuid' not in event or not event['uuid'] or not isinstance(event['uuid'], str):
+        if request_id_key not in event or not event[request_id_key] or not isinstance(event[request_id_key], str):
             return {
                 'statusCode': 400,
-                'body': {
+                'bodypdf-converter': {
                     'message': '요청이 유효하지 않습니다.'
                 }
             }
         
-        request_uuid = event.get('requestId').strip() # 앞뒤 공백 제거
+        request_uuid = event.get(request_id_key).strip() # 앞뒤 공백 제거
         input_key = f"temp/{request_uuid}/{request_uuid}.zip"
         output_key = f"temp/{request_uuid}/{request_uuid}.result.pdf"
 
