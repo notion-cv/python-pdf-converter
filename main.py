@@ -18,7 +18,7 @@ CUSTOM_CSS_LINK = os.getenv('CSS_PATH')
 
 # s3
 S3_BUCKET = os.getenv('S3_BUCKET')
-LOCAL_TEMP_DIR = 'tmp/'
+LOCAL_TEMP_DIR = '/tmp/'
 
 
 def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
@@ -32,7 +32,7 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
                     'message': '요청이 유효하지 않습니다.'
                 }
             }
-        
+
         request_uuid = event.get(request_id_key).strip() # 앞뒤 공백 제거
         input_key = f"temp/{request_uuid}/{request_uuid}.zip"
         output_key = f"temp/{request_uuid}/{request_uuid}.result.pdf"
@@ -58,7 +58,7 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
         for file in os.listdir(LOCAL_TEMP_DIR):
             file_path = os.path.join(LOCAL_TEMP_DIR, file)
             print(f"- {file} {'[디렉토리]' if os.path.isdir(file_path) else '[파일]'}")
-            
+
         actual_files = glob.glob(f"{temp_zip_local_path}*")
         print(f"temp_zip_local_path: {temp_zip_local_path}")
         print(f"actiaul_files: {actual_files}")
