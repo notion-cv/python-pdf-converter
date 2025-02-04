@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/python:3.10
+FROM public.ecr.aws/lambda/python:3.13
 
 # 시스템 라이브러리 설치
 RUN dnf update -y && \
