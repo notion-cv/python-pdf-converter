@@ -41,6 +41,7 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
 
         # 임시 로컬 파일 경로 설정
         temp_zip_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.zip")
+        print('temp_zip_local_path: ', temp_zip_local_path)
         temp_extracted_files_path = os.path.join(LOCAL_TEMP_DIR, 'extracted/')
         temp_html_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.html")
         temp_pdf_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.pdf")
