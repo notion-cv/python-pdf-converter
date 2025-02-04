@@ -7,7 +7,13 @@ RUN yum update -y && \
     poppler-utils \
     tesseract \
     tesseract-langpack-kor \
-    ghostscript
+    ghostscript \
+    pango \      
+    pango-devel \ 
+    libffi-devel \
+    cairo \       
+    cairo-devel \ 
+    gcc
 
 # 작업 디렉토리 설정
 WORKDIR ${LAMBDA_TASK_ROOT}
