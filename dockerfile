@@ -5,9 +5,8 @@ RUN yum update -y && \
     yum install -y \
     poppler-utils \
     tesseract \
-    tesseract-langpack-kor \  # 한글 OCR
-    ghostscript && \
-    yum clean all
+    tesseract-langpack-kor \
+    ghostscript
 
 # 작업 디렉토리 설정
 WORKDIR ${LAMBDA_TASK_ROOT}
