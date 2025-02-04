@@ -1,8 +1,8 @@
-FROM public.ecr.aws/lambda/python:3.13
+FROM public.ecr.aws/lambda/python:3.10
 
 # 시스템 라이브러리 설치
-RUN yum update -y && \
-    yum install -y \
+RUN dnf update -y && \
+    dnf install -y \
     poppler-utils \
     tesseract \
     tesseract-langpack-kor \
@@ -25,11 +25,14 @@ COPY main.py .
 # Python 패키지 설치
 RUN pip install -r requirements.txt
 
-# 환경변수 설정 (빌드할 때 넣어줘야 함)
+# 환경변수 설정
 ARG S3_BUCKET
 ARG CSS_PATH
 ENV S3_BUCKET=${S3_BUCKET} \
     CSS_PATH=${CSS_PATH}
+
+# Pango 버전 확인
+RUN pkg-config --modversion pango
 
 # Lambda 핸들러 설정
 CMD ["main.lambda_handler"]
