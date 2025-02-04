@@ -32,5 +32,8 @@ ARG CSS_PATH
 ENV S3_BUCKET=${S3_BUCKET} \
     CSS_PATH=${CSS_PATH}
 
+# Pango 버전 확인
+RUN pkg-config --modversion pango
+
 # Lambda 핸들러 설정
 CMD ["main.lambda_handler"]
