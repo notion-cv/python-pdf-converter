@@ -1,5 +1,7 @@
 FROM public.ecr.aws/lambda/python:3.9
 
+yum --showduplicates list pango
+yum --showduplicates list pango-devel
 
 # 시스템 라이브러리 설치
 RUN yum update -y && \
