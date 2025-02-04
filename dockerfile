@@ -1,8 +1,9 @@
 FROM public.ecr.aws/lambda/python:3.9
 
-# EPEL 저장소 추가 
-RUN yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-
+# Amazon Linux 2용 EPEL 저장소 추가
+RUN amazon-linux-extras enable epel && \
+    yum clean metadata && \
+    yum install -y epel-release
 
 # 시스템 라이브러리 설치
 RUN yum update -y && \
