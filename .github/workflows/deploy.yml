@@ -20,17 +20,27 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+      # ECR 로그인
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
       - name: Build and deploy
         env:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
           CSS_PATH: ${{ secrets.CSS_PATH }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.ref_name }}
         # --build arg : Dockerfile ARG 환경변수 전달
         run: |
           docker build \
             --build-arg S3_BUCKET=$S3_BUCKET \
             --build-arg CSS_PATH=$CSS_PATH \
-            -t lambda-function:${{ github.ref_name }} .
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
           aws lambda update-function-code \
             --function-name ${{secrets.LAMBDA_FUNCTION_NAME}} \
-            --image-uri $IMAGE_NAME:${{github.ref_name}}
+            --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
