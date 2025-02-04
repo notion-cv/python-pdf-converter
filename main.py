@@ -52,6 +52,8 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
         # 1. zip 파일 압축 해제
         # issue) lambda에서는 zip 파일 받으면 뒤에 문자를 더 붙이기도 함
         actual_files = glob.glob(f"{temp_zip_local_path}*")
+        print(f"temp_zip_local_path: {temp_zip_local_path}")
+        print(f"actiaul_files: {actual_files}")
         if actual_files:
             actual_file_path = actual_files[0]
             print(f"Actual file path: {actual_file_path}")
