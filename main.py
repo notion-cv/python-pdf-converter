@@ -9,6 +9,7 @@ import glob
 from function.extract_files_from_zip import extract_files_from_zip as extract_files
 from function.convert_html_to_ocr_pdf import convert_html_to_ocr_pdf as convert_to_ocr_pdf
 from function.s3 import download_zip, upload_pdf
+from function.html import fix_double_br, remove_resolution_attr
 
 load_dotenv() 
 
@@ -37,39 +38,22 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
         input_key = f"temp/{request_uuid}/{request_uuid}.zip"
         output_key = f"temp/{request_uuid}/{request_uuid}.result.pdf"
 
-        print(f'requestID 존재함 / requestId: {request_uuid}')
-
         # 임시 로컬 파일 경로 설정
         temp_zip_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.zip")
-        print('temp_zip_local_path: ', temp_zip_local_path)
         temp_extracted_files_path = os.path.join(LOCAL_TEMP_DIR, 'extracted/')
         temp_html_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.html")
         temp_pdf_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.pdf")
         
         # zip 파일 다운로드
         download_zip(S3_BUCKET, input_key, temp_zip_local_path)
-        print(f'zip 파일 다운로드 완료  / temp_zip_local_path: {temp_zip_local_path}')
 
         # 1. zip 파일 압축 해제
-        # issue) lambda에서는 zip 파일 받으면 뒤에 문자를 더 붙이기도 함
-
-        # tmp 디렉토리 내용 출력
-        print("✨tmp 디렉토리 내용:")
-        for file in os.listdir(LOCAL_TEMP_DIR):
-            file_path = os.path.join(LOCAL_TEMP_DIR, file)
-            print(f"- {file} {'[디렉토리]' if os.path.isdir(file_path) else '[파일]'}")
-
         actual_files = glob.glob(f"{temp_zip_local_path}*")
-        print(f"temp_zip_local_path: {temp_zip_local_path}")
-        print(f"actiaul_files: {actual_files}")
+        
         if actual_files:
             actual_file_path = actual_files[0]
-            print(f"Actual file path: {actual_file_path}")
-            
             with zipfile.ZipFile(actual_file_path, 'r') as zip_ref:
                 zip_ref.extractall(temp_extracted_files_path)
-
-        print('zip 파일 압축 성공!')
 
         # 2. HTML 파일과 에셋 디렉토리 찾기
         html_file, image_files = extract_files(temp_extracted_files_path)
@@ -79,15 +63,11 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
                 'statusCode': 400,
                 'body': 'HTML file not found in ZIP'
             }
-        
-        print('HTML, image 찾기 성공')
 
         # 3. HTML 파일 읽음
         with open(html_file, 'r', encoding='utf-8') as f:
             soup = BeautifulSoup(f, 'html.parser')
 
-        print('HTML 파일 읽기 완료')
-        
         # 4. 이미지 파일 링크 변경해주기
         for img in soup.find_all('img'):
             src = img.get('src')
@@ -96,22 +76,22 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
                 if filename in image_files:
                     img['src'] = image_files[filename]
 
-        print('이미지 파일 링크 변경 성공!')
+        # 5. resolution attribute 제거
+        remove_resolution_attr(soup)
 
-        # 5. 기존 style 삭제
+        # 6. br 연속 태그 제거
+        fix_double_br(soup)
+
+        # 7. 스타일 변경
         for style in soup.find_all('style'):
             style.decompose()
 
-        # 6. font 넣기
         head = soup.find('head')
         font_link = soup.new_tag('link', rel='stylesheet', href=PRETENDARD_LINK)
         head.append(font_link)
 
-        # 7. CSS 파일 link로 추가
         new_style_link = soup.new_tag('link', rel='stylesheet', href=CUSTOM_CSS_LINK)
         head.append(new_style_link)
-
-        print('스타일 변경 성공')
 
         # 8. HTML 파일 저장 
         with open(temp_html_local_path, 'w', encoding='utf-8') as f:
