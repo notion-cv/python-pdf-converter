@@ -1,8 +1,5 @@
 FROM public.ecr.aws/lambda/python:3.9
 
-RUN yum --showduplicates list pango
-RUN yum --showduplicates list pango-devel
-
 # 시스템 라이브러리 설치
 RUN yum update -y && \
     yum install -y \
@@ -33,9 +30,6 @@ ARG S3_BUCKET
 ARG CSS_PATH
 ENV S3_BUCKET=${S3_BUCKET} \
     CSS_PATH=${CSS_PATH}
-
-# Pango 버전 확인
-RUN pkg-config --modversion pango
 
 # Lambda 핸들러 설정
 CMD ["main.lambda_handler"]
