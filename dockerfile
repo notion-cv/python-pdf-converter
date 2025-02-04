@@ -1,11 +1,12 @@
 FROM public.ecr.aws/lambda/python:3.9
 
 # 시스템 라이브러리 설치
-RUN yum install -y \
+RUN yum update -y && \
+    yum install -y \
     poppler-utils \
     tesseract \
-    tesseract-data-kor \  # 한글 OCR
-    ghostscript
+    tesseract-langpack-kor && \  # 한글 OCR
+    yum clean all
 
 # 작업 디렉토리 설정
 WORKDIR ${LAMBDA_TASK_ROOT}
