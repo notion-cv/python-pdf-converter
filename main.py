@@ -21,7 +21,7 @@ S3_BUCKET = os.getenv('S3_BUCKET')
 LOCAL_TEMP_DIR = 'tmp/'
 
 
-def lambda_handler(event: Dict[Any, Any]) -> Dict[str, Any]:
+def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
     try:
         request_id_key = 'requestId'
         # UUID 존재 및 유효성 체크
@@ -51,7 +51,7 @@ def lambda_handler(event: Dict[Any, Any]) -> Dict[str, Any]:
 
         # 1. zip 파일 압축 해제
         # issue) lambda에서는 zip 파일 받으면 뒤에 문자를 더 붙이기도 함
-        actual_files = glob.glob("tmp/abcd-1234-test-1234.zip*")
+        actual_files = glob.glob(f"{temp_zip_local_path}*")
         if actual_files:
             actual_file_path = actual_files[0]
             print(f"Actual file path: {actual_file_path}")
