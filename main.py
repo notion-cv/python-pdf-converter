@@ -3,6 +3,7 @@ import zipfile
 from bs4 import BeautifulSoup
 from typing import Dict, Any
 from dotenv import load_dotenv
+import glob
 
 # Local Import
 from function.extract_files_from_zip import extract_files_from_zip as extract_files
@@ -20,7 +21,7 @@ S3_BUCKET = os.getenv('S3_BUCKET')
 LOCAL_TEMP_DIR = 'tmp/'
 
 
-def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
+def lambda_handler(event: Dict[Any, Any]) -> Dict[str, Any]:
     try:
         request_id_key = 'requestId'
         # UUID 존재 및 유효성 체크
@@ -49,8 +50,14 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
         print(f'zip 파일 다운로드 완료  / temp_zip_local_path: {temp_zip_local_path}')
 
         # 1. zip 파일 압축 해제
-        with zipfile.ZipFile(temp_zip_local_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_extracted_files_path)
+        # issue) lambda에서는 zip 파일 받으면 뒤에 문자를 더 붙이기도 함
+        actual_files = glob.glob("tmp/abcd-1234-test-1234.zip*")
+        if actual_files:
+            actual_file_path = actual_files[0]
+            print(f"Actual file path: {actual_file_path}")
+            
+            with zipfile.ZipFile(actual_file_path, 'r') as zip_ref:
+                zip_ref.extractall(temp_extracted_files_path)
 
         print('zip 파일 압축 성공!')
 
