@@ -5,11 +5,11 @@ RUN dnf update -y && \
     dnf install -y \
     poppler-utils \
     ghostscript \
-    pango \      
-    pango-devel \ 
+    pango \
+    pango-devel \
     libffi-devel \
-    cairo \       
-    cairo-devel \ 
+    cairo \
+    cairo-devel \
     gcc \
     make \
     automake \
@@ -22,8 +22,10 @@ RUN dnf update -y && \
     zlib-devel \
     gcc-c++ \
     wget \
-    git \
-    glibc-common 
+    git
+
+# 환경 변수 설정
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 # Leptonica 설치
 RUN cd /tmp && \
@@ -32,9 +34,8 @@ RUN cd /tmp && \
     cd leptonica-1.83.1 && \
     ./configure && \
     make && \
-    make install && \
-    echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
-    ldconfig
+    make install
+
 
 # Tesseract 설치
 RUN cd /tmp && \
@@ -44,8 +45,7 @@ RUN cd /tmp && \
     ./autogen.sh && \
     ./configure && \
     make && \
-    make install && \
-    ldconfig
+    make install
 
 # 한국어 데이터 설치
 RUN cd /tmp && \
