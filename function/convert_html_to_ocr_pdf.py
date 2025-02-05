@@ -7,8 +7,8 @@ import pymupdf # PyMuPDF
 
 def convert_html_to_ocr_pdf(htmlPath, pdfSavePath):
     # 임시 저장 pdf
-    TEMP_PDF_PATH = 'tmp/temp.pdf'
-    MERGED_PDF_PATH = 'tmp/merged.pdf'
+    TEMP_PDF_PATH = '/tmp/temp.pdf'
+    MERGED_PDF_PATH = '/tmp/merged.pdf'
 
     # 1. html to pdf
     HTML(htmlPath).write_pdf(TEMP_PDF_PATH, resolution=300)
@@ -39,7 +39,7 @@ def convert_html_to_ocr_pdf(htmlPath, pdfSavePath):
     page_files = []  # 생성된 페이지 파일들의 리스트를 저장 
 
     for i, page in enumerate(pages):
-        output_file = f'tmp/page_{i}.pdf'
+        output_file = f'/tmp/page_{i}.pdf'
         page_files.append(output_file)
         
         # OCR 처리 - 한글과 영어 모두 처리
