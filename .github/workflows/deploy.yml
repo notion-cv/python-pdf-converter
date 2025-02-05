@@ -36,7 +36,7 @@ jobs:
           IMAGE_TAG: ${{ github.ref_name }}
         # --build arg : Dockerfile ARG 환경변수 전달
         run: |
-          docker build \
+          docker build --platform linux/amd64 \
             --build-arg S3_BUCKET=$S3_BUCKET \
             --build-arg CSS_PATH=$CSS_PATH \
             --build-arg AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID \
