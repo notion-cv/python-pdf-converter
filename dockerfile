@@ -25,18 +25,18 @@ RUN dnf update -y && \
     git
 
 # 환경 변수 설정
-ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
+    PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # Leptonica 설치
 RUN cd /tmp && \
     wget https://github.com/DanBloomberg/leptonica/releases/download/1.83.1/leptonica-1.83.1.tar.gz && \
     tar -xzvf leptonica-1.83.1.tar.gz && \
     cd leptonica-1.83.1 && \
-    ./configure && \
+    ./configure --prefix=/usr/local && \
     make && \
     make install
-
-
+    
 # Tesseract 설치
 RUN cd /tmp && \
     wget https://github.com/tesseract-ocr/tesseract/archive/refs/tags/5.3.3.tar.gz && \
