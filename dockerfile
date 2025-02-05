@@ -1,18 +1,24 @@
 FROM public.ecr.aws/lambda/python:3.13
 
-# 시스템 라이브러리 설치
+# EPEL 저장소 추가 및 시스템 라이브러리 설치
 RUN dnf update -y && \
     dnf install -y \
-    poppler-utils \
-    tesseract \
-    tesseract-langpack-kor \
-    ghostscript \
-    pango \      
-    pango-devel \ 
-    libffi-devel \
-    cairo \       
-    cairo-devel \ 
-    gcc
+        dnf-utils && \
+    dnf config-manager --set-enabled \
+        crb && \
+    dnf install -y \
+        https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm && \
+    dnf install -y \
+        poppler-utils \
+        tesseract \
+        tesseract-langpack-kor \
+        ghostscript \
+        pango \      
+        pango-devel \ 
+        libffi-devel \
+        cairo \       
+        cairo-devel \ 
+        gcc
 
 # 작업 디렉토리 설정
 WORKDIR ${LAMBDA_TASK_ROOT}
