@@ -29,6 +29,8 @@ jobs:
         env:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
           CSS_PATH: ${{ secrets.CSS_PATH }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ github.ref_name }}
@@ -37,6 +39,8 @@ jobs:
           docker build \
             --build-arg S3_BUCKET=$S3_BUCKET \
             --build-arg CSS_PATH=$CSS_PATH \
+            --build-arg AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID \
+            --build-arg AWS_REGION=$AWS_REGION \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
