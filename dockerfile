@@ -7,6 +7,14 @@ ARG AWS_REGION
 
 FROM ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/notion-cv/converter-base:latest
 
+# 환경변수 설정
+ENV S3_BUCKET=${S3_BUCKET} \
+    CSS_PATH=${CSS_PATH} \
+    AWS_REGION=${AWS_REGION} \
+    LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
+    TESSDATA_PREFIX=/usr/local/share/tessdata
+
+
 # 작업 디렉토리 설정
 WORKDIR ${LAMBDA_TASK_ROOT}
 
@@ -18,11 +26,7 @@ COPY main.py .
 # Python 패키지 설치
 RUN pip install -r requirements.txt
 
-# 환경변수 설정
-ENV S3_BUCKET=${S3_BUCKET} \
-    CSS_PATH=${CSS_PATH} \
-    LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
-    TESSDATA_PREFIX=/usr/local/share/tessdata
+
 
 RUN echo "AWS_REGION: ${AWS_REGION}"
 RUN echo "S3_BUCKET: ${S3_BUCKET}"
