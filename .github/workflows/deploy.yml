@@ -36,8 +36,8 @@ jobs:
           IMAGE_TAG: ${{ github.ref_name }}
         # --build arg : Dockerfile ARG 환경변수 전달
         run: |
-          echo "S3_BUCKET: $S3_BUCKET"
-          echo "AWS_REGION: $AWS_REGION"
+          echo "S3_BUCKET: ${{ secrets.S3_BUCKET }}"
+          echo "AWS_REGION: ${{ secrets.AWS_REGION }}"
 
           docker build --platform linux/amd64 \
             --build-arg S3_BUCKET=$S3_BUCKET \
