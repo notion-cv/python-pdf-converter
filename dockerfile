@@ -66,7 +66,7 @@ RUN pip install -r requirements.txt
 ARG S3_BUCKET
 ARG CSS_PATH
 ENV S3_BUCKET=${S3_BUCKET} \
-    CSS_PATH=${CSS_PATH}
+    CSS_PATH=${CSS_PATH} \
     LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH \
     TESSDATA_PREFIX=/usr/local/share/tessdata
 
