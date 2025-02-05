@@ -24,7 +24,7 @@ RUN dnf update -y && \
     wget \
     git
 
-# Leptonica 설치 (Tesseract의 의존성)
+# Leptonica 설치
 RUN cd /tmp && \
     wget https://github.com/DanBloomberg/leptonica/releases/download/1.83.1/leptonica-1.83.1.tar.gz && \
     tar -xzvf leptonica-1.83.1.tar.gz && \
@@ -32,6 +32,7 @@ RUN cd /tmp && \
     ./configure && \
     make && \
     make install && \
+    echo "/usr/local/lib" > /etc/ld.so.conf.d/local.conf && \
     ldconfig
 
 # Tesseract 설치
