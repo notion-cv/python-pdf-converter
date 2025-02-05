@@ -2,7 +2,7 @@ FROM public.ecr.aws/lambda/python:3.13
 
 # 시스템 라이브러리 설치
 RUN dnf update -y && \
-    dnf install -y \
+    dnf install -y \:
     poppler-utils \
     ghostscript \
     pango \      
@@ -22,7 +22,8 @@ RUN dnf update -y && \
     zlib-devel \
     gcc-c++ \
     wget \
-    git
+    git \
+    glibc-common 
 
 # Leptonica 설치
 RUN cd /tmp && \
