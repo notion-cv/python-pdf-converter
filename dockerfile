@@ -25,7 +25,7 @@ ENV S3_BUCKET=${S3_BUCKET} \
     TESSDATA_PREFIX=/usr/local/share/tessdata
 
 RUN echo "AWS_REGION: ${AWS_REGION}"
-RUN echo "BUCKET_NAME: ${BUCKET_NAME}"
+RUN echo "S3_BUCKET: ${S3_BUCKET}"
 
 # Lambda 핸들러 설정
 CMD ["main.lambda_handler"]
