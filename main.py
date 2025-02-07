@@ -1,4 +1,5 @@
 import os
+import shutil
 import zipfile
 from bs4 import BeautifulSoup
 from typing import Dict, Any
@@ -35,14 +36,22 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
             }
 
         request_uuid = event.get(request_id_key).strip() # 앞뒤 공백 제거
+
+        # s3
         input_key = f"temp/{request_uuid}/{request_uuid}.zip"
         output_key = f"temp/{request_uuid}/{request_uuid}.result.pdf"
 
         # 임시 로컬 파일 경로 설정
-        temp_zip_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.zip")
-        temp_extracted_files_path = os.path.join(LOCAL_TEMP_DIR, 'extracted/')
-        temp_html_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.html")
-        temp_pdf_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}.pdf")
+        temp_zip_dir_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}")
+        temp_zip_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}/{request_uuid}.zip")
+        temp_extracted_files_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}/extracted/")
+        temp_html_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}/{request_uuid}.html")
+        temp_pdf_local_path = os.path.join(LOCAL_TEMP_DIR, f"{request_uuid}/{request_uuid}.pdf")
+
+        # 디렉토리 생성
+        if (os.path.exists(temp_zip_dir_path)):
+            shutil.rmtree(temp_zip_dir_path)
+        os.makedirs(temp_zip_dir_path)
         
         # zip 파일 다운로드
         download_zip(S3_BUCKET, input_key, temp_zip_local_path)
@@ -92,6 +101,7 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
 
         new_style_link = soup.new_tag('link', rel='stylesheet', href=CUSTOM_CSS_LINK)
         head.append(new_style_link)
+        print(CUSTOM_CSS_LINK)
 
         # 8. HTML 파일 저장 
         with open(temp_html_local_path, 'w', encoding='utf-8') as f:
@@ -100,7 +110,7 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
         print('HTML 저장')
 
         # 9. getOcrPdf
-        convert_to_ocr_pdf(temp_html_local_path, temp_pdf_local_path)
+        convert_to_ocr_pdf(temp_html_local_path, temp_pdf_local_path, request_uuid)
 
         print('PDF 변환 완료')
 
@@ -112,6 +122,7 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
         # 11. os 파일 정리
         os.remove(temp_zip_local_path)
         os.remove(temp_pdf_local_path)
+        shutil.rmtree(temp_zip_dir_path)
 
         return {
             'statusCode': 200,
@@ -135,4 +146,4 @@ def lambda_handler(event: Dict[Any, Any], context: Any) -> Dict[str, Any]:
 
 
 # 테스트용
-# lambda_handler({'requestId': 'abcd-1234-test-1234'})
+# lambda_handler({'requestId': '24c068be-b0de-4ca6-9367-f1bb8d2ed874'})
